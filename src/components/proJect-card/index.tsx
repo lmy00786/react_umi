@@ -4,7 +4,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import styles from './index.less';
 
-// 头部右侧
+// 头部右 侧
 class CardhradRight extends Component {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
