@@ -26,7 +26,6 @@ export const getProjectList = function(params: PramasType.ProjectList) {
         };
         intetface_res?.code === '0000'? resolve(intetface_res):reject(intetface_res)
       })
-      .catch((e:any) => {
-        reject(e)});
+      .catch((e:any) => reject(e));
   });
 };

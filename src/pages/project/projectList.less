@@ -1,0 +1,19 @@
+@import url(../../assets/css/variable.less);
+.view {
+  padding: 24px;
+  overflow: hidden;
+  height: 100%;
+  .content {
+    height: calc(100% - 56px);
+    overflow-y: scroll;
+    @scrollbar();
+    .gutter_box {
+      margin: 8px 0;
+    }
+  }
+  .page {
+    padding-top: 24px;
+    display: flex;
+    flex-direction: row-reverse;
+  }
+}
