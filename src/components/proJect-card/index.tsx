@@ -4,6 +4,9 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import styles from './index.less';
 
+type TypeProps = {
+  proJect: any; // since it route params
+};
 // 头部右 侧
 class CardhradRight extends Component {
   static propTypes = {
@@ -23,7 +26,7 @@ class CardhradRight extends Component {
   }
 }
 // 头部左侧
-class CardhradLeft extends Component {
+class CardhradLeft extends Component<any> {
   static propTypes = {
     projectName: PropTypes.string.isRequired,
     projectName_ps: PropTypes.string.isRequired,
@@ -55,7 +58,7 @@ class CardBottom extends Component {
   }
 }
 //内容部分
-class CardContent extends Component {
+class CardContent extends Component<TypeProps> {
   static propTypes = {
     proJect: PropTypes.object.isRequired,
   };
@@ -80,7 +83,7 @@ class CardContent extends Component {
     );
   }
 }
-export default class ProJectCard extends Component {
+export default class ProJectCard extends Component<TypeProps> {
   static propTypes = {
     proJect: PropTypes.object.isRequired,
   };
