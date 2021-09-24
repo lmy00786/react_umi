@@ -5,7 +5,9 @@ import PropTypes from 'prop-types';
 import styles from './index.less';
 
 type TypeProps = {
-  proJect: any; // since it route params
+  proJect: any;
+  clickProjectItem?: any;
+  currentProject?: any;
 };
 // 头部右 侧
 class CardhradRight extends Component {
@@ -41,22 +43,6 @@ class CardhradLeft extends Component<any> {
     );
   }
 }
-// 底部
-class CardBottom extends Component {
-  render() {
-    return (
-      <div className={styles.Card_bottom}>
-        <div className={styles.bottom_left}>
-          <span>负责人：</span>
-          <span>刘</span>
-        </div>
-        <div className={styles.bottom_right}>
-          <Button>子项目10</Button>
-        </div>
-      </div>
-    );
-  }
-}
 //内容部分
 class CardContent extends Component<TypeProps> {
   static propTypes = {
@@ -86,17 +72,29 @@ class CardContent extends Component<TypeProps> {
 export default class ProJectCard extends Component<TypeProps> {
   static propTypes = {
     proJect: PropTypes.object.isRequired,
+    currentProject: PropTypes.object.isRequired,
+    clickProjectItem: PropTypes.func.isRequired,
   };
   render() {
-    const { proJect = {} } = this.props;
-    const { projectName, projectName_ps, projectId } = proJect;
+    const { proJect = {}, clickProjectItem, currentProject } = this.props;
+    const { projectName, projectName_ps, projectId, sonCount } = proJect;
+    const is = projectId === currentProject.projectId;
     return (
       <Card
         title={<CardhradLeft projectName={projectName} projectName_ps={projectName_ps} />}
         extra={<CardhradRight projectId={projectId} />}
+        className={is ? styles.isClick_card : null}
       >
-        <CardContent proJect={this.props.proJect} />
-        <CardBottom />
+        <CardContent proJect={proJect} />
+        <div className={styles.Card_bottom}>
+          <div className={styles.bottom_left}>
+            <span>负责人：</span>
+            <span>刘</span>
+          </div>
+          <div className={styles.bottom_right}>
+            <Button onClick={() => clickProjectItem(proJect)}>子项目{sonCount}</Button>
+          </div>
+        </div>
       </Card>
     );
   }
