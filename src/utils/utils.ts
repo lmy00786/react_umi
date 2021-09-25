@@ -13,3 +13,8 @@ export const arrTrans = (num: number, arr: any[]) => {
   });
   return newArr;
 };
+// 滚动到顶部
+export const scrollTopDOM = function scrollTopDOM(className: string) {
+  var dom = window.document.getElementsByClassName(className)[0];
+  dom ? (dom.scrollTop = 0) : null;
+};

@@ -4,7 +4,7 @@ import ProJectCard from '../../components/proJect-card';
 import styles from './projectList.less';
 import { getProjectList, getSonProjectList } from '../../server';
 import { sonProjectColumns } from './columns';
-import { arrTrans } from '../../utils/utils';
+import { arrTrans, scrollTopDOM } from '../../utils/utils';
 import { Instance } from '../../types/typing.Instance';
 export default class project extends Component {
   state = {
@@ -30,6 +30,8 @@ export default class project extends Component {
   private getData() {
     // 清空子项目
     this.setState({ currentProject: {}, sonProjectData: [] });
+    // 列表滚动顶部
+    scrollTopDOM('scrollFlag');
 
     const { name, pageSize, pageNum, id } = this.state;
     getProjectList({ name, pageSize, pageNum, id })
@@ -127,7 +129,7 @@ export default class project extends Component {
     });
     return (
       <div className={styles.view}>
-        <div className={styles.content}>{vNode}</div>
+        <div className={`${styles.content} scrollFlag`}>{vNode}</div>
         <div className={styles.page}>
           <Pagination
             defaultCurrent={1}
