@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Row, Col, message, Pagination } from 'antd';
+import { Row, Col, message, Pagination, Table } from 'antd';
 import ProJectCard from '../../components/proJect-card';
 import styles from './projectList.less';
 import { getProjectList, getSonProjectList } from '../../server';
+import { sonProjectColumns } from './columns';
 export default class project extends Component {
   state = {
     data: [],
@@ -43,6 +44,7 @@ export default class project extends Component {
         message.error(e.message);
       });
   }
+
   // 页数发生改变
   private pageChange = (pageNum: number, pageSize: any) => {
     this.setState({ pageNum });
@@ -54,6 +56,23 @@ export default class project extends Component {
     this.setState({ currentProject });
     this.getSonProjectList(currentProject.projectId);
   };
+
+  // 创建子项目列表
+  createdSonProjectTable() {
+    const { sonProjectData } = this.state;
+    const columns = sonProjectColumns();
+    return (
+      <Table
+        columns={columns}
+        dataSource={sonProjectData}
+        key={'project'}
+        rowKey={(record: any) => record.sonProjectId}
+        pagination={false}
+        className={styles.sonProject_table}
+      />
+    );
+  }
+
   componentDidMount() {
     // 初始化请求一次
     this.getData();
@@ -62,27 +81,29 @@ export default class project extends Component {
   render() {
     const { pageSize, pageNum, count, currentProject, sonProjectData } = this.state;
 
+    let vNode = [];
+
     // 如果子项目列表有值创建table并插入到caedList中;
-    let table = '';
     if (Array.isArray(sonProjectData) && sonProjectData[0]) {
-      //table
-      console.log(sonProjectData, '子项目数据要展示了！！！！需要处理逻辑');
+      vNode.push(this.createdSonProjectTable());
     }
 
-    let card = this.state.data.map((item: any) => (
-      <Col span={6} className={styles.gutter_box} key={item.projectId}>
-        <ProJectCard
-          proJect={item}
-          currentProject={currentProject}
-          clickProjectItem={(itemInfo: any) => this.clickProjectItem(itemInfo)}
-        />
-      </Col>
-    ));
+    this.state.data.map((item: any) =>
+      vNode.push(
+        <Col span={6} className={styles.gutter_box} key={item.projectId}>
+          <ProJectCard
+            proJect={item}
+            currentProject={currentProject}
+            clickProjectItem={(itemInfo: any) => this.clickProjectItem(itemInfo)}
+          />
+        </Col>,
+      ),
+    );
 
     return (
       <div className={styles.view}>
         <Row className={styles.content} gutter={16}>
-          {card}
+          {vNode}
         </Row>
         <div className={styles.page}>
           <Pagination

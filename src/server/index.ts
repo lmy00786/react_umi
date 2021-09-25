@@ -11,7 +11,7 @@ export const getProjectList = function(params: PramasType.ProjectList) {
           arr.push({
             projectId: nanoid(),
             projectName: `迁移阿里云${i + 1}`,
-            projectName_ps: '百威迁移项目',
+            projectNamePs: '百威迁移项目',
             projectNum: `0${params.pageNum}0${i + 1}`,
             projectType: '迁云',
             projectDepartment: '云化技术与架构',
@@ -41,10 +41,11 @@ export const getSonProjectList = function(projectId: string) {
           arr.push({
             sonProjectId: nanoid(),
             sonProjectName: `子名称${i}`,
+            projectNum: `S00${i + 1}`,
             sonProjectStartTime: new Date(),
             sonProjectEndTime: new Date(),
             sonProjectState: '启用',
-            sonProjectPs: `子项目藐视${nanoid()}`,
+            sonProjectPs: `子项目描述${nanoid()}`,
           });
         }
         intetface_res = {

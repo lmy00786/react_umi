@@ -38,9 +38,12 @@
   }
 }
 .isClick_card {
-  background-color: rgb(235, 242, 254);
+  background-color: @light_primary_color;
   button {
     background: @primary_color;
+    span {
+      color: @white_color !important;
+    }
     &:focus {
       background: @primary_color;
       span {

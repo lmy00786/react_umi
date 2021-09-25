@@ -31,14 +31,14 @@ class CardhradRight extends Component {
 class CardhradLeft extends Component<any> {
   static propTypes = {
     projectName: PropTypes.string.isRequired,
-    projectName_ps: PropTypes.string.isRequired,
+    projectNamePs: PropTypes.string.isRequired,
   };
   render() {
-    const { projectName, projectName_ps } = this.props;
+    const { projectName, projectNamePs } = this.props;
     return (
       <div className={styles.Card_hrad_left}>
         <div>{projectName}</div>
-        <div>{projectName_ps}</div>
+        <div>{projectNamePs}</div>
       </div>
     );
   }
@@ -77,11 +77,11 @@ export default class ProJectCard extends Component<TypeProps> {
   };
   render() {
     const { proJect = {}, clickProjectItem, currentProject } = this.props;
-    const { projectName, projectName_ps, projectId, sonCount } = proJect;
+    const { projectName, projectNamePs, projectId, sonCount } = proJect;
     const is = projectId === currentProject.projectId;
     return (
       <Card
-        title={<CardhradLeft projectName={projectName} projectName_ps={projectName_ps} />}
+        title={<CardhradLeft projectName={projectName} projectNamePs={projectNamePs} />}
         extra={<CardhradRight projectId={projectId} />}
         className={is ? styles.isClick_card : null}
       >

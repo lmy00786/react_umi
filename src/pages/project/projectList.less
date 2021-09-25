@@ -16,4 +16,18 @@
     display: flex;
     flex-direction: row-reverse;
   }
+  :global(.sonProject_table .ant-table-tbody > tr > td) {
+    border-bottom: none;
+  }
+
+  :global {
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td {
+      border-bottom: none;
+    }
+    .ant-table-thead > tr > th {
+      background-color: @light_primary_color;
+      font-weight: 900;
+    }
+  }
 }
