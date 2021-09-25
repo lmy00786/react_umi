@@ -16,7 +16,7 @@ export const getProjectList = function(params: PramasType.ProjectList) {
             projectType: '迁云',
             projectDepartment: '云化技术与架构',
             projectPrincipal: `刘${params.pageNum}_${i + 1}`,
-            sonProjectCount: parseInt(Math.random() * 200 + ''),
+            sonProjectCount: Math.floor(Math.random() * (8 - 2 + 1) + 2),
           });
         }
         intetface_res = {
@@ -30,26 +30,25 @@ export const getProjectList = function(params: PramasType.ProjectList) {
   });
 };
 // 获取子项目没有设置分页直接传入id（后期有分页需求自己修改）
-export const getSonProjectList = function(projectId: string) {
+export const getSonProjectList = function(projectId: string, num: number) {
   return new Promise((resolve, reject) => {
     reqSonProjectList(projectId)
       .then((intetface_res: any) => {
-        let arr = [],
-          j = Math.floor(Math.random() * (8 - 5 + 1) + 5);
-        for (let i = 0; i < j; i++) {
+        let arr = [];
+        for (let i = 0; i < num; i++) {
           arr.push({
             sonProjectId: nanoid(),
             sonProjectName: `子名称${i}`,
             projectNum: `S00${i + 1}`,
             sonProjectStartTime: new Date(),
             sonProjectEndTime: new Date(),
-            sonProjectState: '启用',
+            sonProjectState: parseInt(Math.random() * 100 + '') % 2 === 0 ? '启用' : '停用',
             sonProjectPs: `子项目描述${nanoid()}`,
           });
         }
         intetface_res = {
           code: '0000',
-          count: j,
+          count: num,
           data: arr,
         };
         intetface_res?.code === '0000' ? resolve(intetface_res) : reject(intetface_res);

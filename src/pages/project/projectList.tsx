@@ -46,9 +46,9 @@ export default class project extends Component {
       });
   }
 
-  // 获取子项目数据
-  private getSonProjectList(projectId: string) {
-    getSonProjectList(projectId)
+  // 获取子项目数据(num:实际调接口中用不到)
+  private getSonProjectList(projectId: string, num: number) {
+    getSonProjectList(projectId, num)
       .then((intetface_res: any) => {
         this.setState({ sonProjectData: intetface_res.data });
       })
@@ -66,8 +66,9 @@ export default class project extends Component {
   // 点击某一个card
   private clickProjectChange = (flag: boolean, currentProject?: any) => {
     if (flag) {
+      const { projectId, sonProjectCount } = currentProject;
       this.setState({ currentProject, sonProjectData: [] });
-      this.getSonProjectList(currentProject.projectId);
+      this.getSonProjectList(projectId, sonProjectCount);
     } else {
       this.setState({ currentProject: {}, sonProjectData: [] });
     }
@@ -81,6 +82,7 @@ export default class project extends Component {
     const columns = sonProjectColumns();
 
     return (
+      // 展示隐藏通过此类名做动画fadenum（不想要直接删掉）
       <Row gutter={16} className={styles.fadenum} key="table">
         <Table
           columns={columns}
