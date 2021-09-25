@@ -3,10 +3,65 @@ import { Row, Col, message, Pagination, Table } from 'antd';
 import ProJectCard from '../../components/proJect-card';
 import styles from './projectList.less';
 import { getProjectList, getSonProjectList } from '../../server';
-import { sonProjectColumns } from './columns';
 import { arrTrans, scrollTopDOM } from '../../utils/utils';
 import { Instance } from '../../types/typing.Instance';
+import moment from 'moment';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 export default class project extends Component {
+  // 表格头部
+  private sonProjectColumns = [
+    {
+      title: '子项目编码',
+      dataIndex: 'projectNum',
+    },
+    {
+      title: '子项目名称',
+      dataIndex: 'sonProjectName',
+    },
+    {
+      title: '开始日期',
+      dataIndex: 'sonProjectStartTime',
+      render: (time: Date) => moment(time).format('YYYY-MM-DD HH:mm:ss'),
+    },
+    {
+      title: '结束日期',
+      dataIndex: 'sonProjectEndTime',
+      render: (time: Date) => moment(time).format('YYYY-MM-DD HH:mm:ss'),
+    },
+    {
+      title: '项目状态',
+      dataIndex: 'sonProjectState',
+    },
+    {
+      title: '描述',
+      dataIndex: 'sonProjectPs',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text: string, record: any) => (
+        <>
+          <a
+            style={{ marginRight: 8 }}
+            onClick={() => {
+              this.sonProjectEditChange(record);
+            }}
+          >
+            <EditOutlined />
+            编辑
+          </a>
+          <a
+            onClick={() => {
+              this.sonProjectDelChange(record);
+            }}
+          >
+            <DeleteOutlined />
+            删除
+          </a>
+        </>
+      ),
+    },
+  ];
   state = {
     // 项目列表数据
     data: [],
@@ -43,6 +98,7 @@ export default class project extends Component {
       })
       .catch((e: any) => {
         message.error(e.message);
+        this.setState({ data: [], count: 0 });
       });
   }
 
@@ -74,18 +130,26 @@ export default class project extends Component {
     }
   };
 
+  // 子项目编辑
+  sonProjectEditChange = (record: any) => {
+    console.log(record, '子项目编辑');
+  };
+
+  // 子项目删除
+  sonProjectDelChange = (record: any) => {
+    console.log(record, '子项目删除');
+  };
+
   // 创建子项目列表
   createdSonProjectTable() {
     // 展示得数据
     const { sonProjectData } = this.state;
-    // 表格头部
-    const columns = sonProjectColumns();
 
     return (
       // 展示隐藏通过此类名做动画fadenum（不想要直接删掉）
       <Row gutter={16} className={styles.fadenum} key="table">
         <Table
-          columns={columns}
+          columns={this.sonProjectColumns}
           dataSource={sonProjectData}
           key={'project'}
           rowKey={(record: any) => record.sonProjectId}
@@ -138,9 +202,7 @@ export default class project extends Component {
             pageSize={pageSize}
             current={pageNum}
             total={count}
-            onChange={(page, pageSize) => {
-              this.pageChange(page, pageSize);
-            }}
+            onChange={(page, pageSize) => this.pageChange(page, pageSize)}
           />
         </div>
       </div>
