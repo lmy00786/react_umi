@@ -22,7 +22,7 @@ export const getProjectList = function(params: PramasType.ProjectList) {
         }
         intetface_res = {
           code: '0000',
-          count: parseInt(Math.random() * 120 + ''),
+          count: 120,
           data: arr,
         };
         intetface_res?.code === '0000' ? resolve(intetface_res) : reject(intetface_res);
@@ -35,8 +35,9 @@ export const getSonProjectList = function(projectId: string) {
   return new Promise((resolve, reject) => {
     reqSonProjectList(projectId)
       .then((intetface_res: any) => {
-        let arr = [];
-        for (let i = 0; i < 8; i++) {
+        let arr = [],
+          j = Math.floor(Math.random() * (8 - 5 + 1) + 5);
+        for (let i = 0; i < j; i++) {
           arr.push({
             sonProjectId: nanoid(),
             sonProjectName: `子名称${i}`,
@@ -48,7 +49,7 @@ export const getSonProjectList = function(projectId: string) {
         }
         intetface_res = {
           code: '0000',
-          count: 8,
+          count: j,
           data: arr,
         };
         intetface_res?.code === '0000' ? resolve(intetface_res) : reject(intetface_res);
