@@ -3,10 +3,11 @@ import { Card, Button } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import styles from './index.less';
+import { Instance } from '../../types/typing.Instance';
 
 type TypeProps = {
   proJect: any;
-  clickProjectItem?: any;
+  clickProjectChange?: any;
   currentProject?: any;
 };
 // 头部右 侧
@@ -49,7 +50,7 @@ class CardContent extends Component<TypeProps> {
     proJect: PropTypes.object.isRequired,
   };
   render() {
-    const { proJect = {} } = this.props;
+    const { proJect } = this.props;
     const { projectNum, projectType, projectDepartment } = proJect;
     return (
       <div className={styles.content}>
@@ -73,26 +74,31 @@ export default class ProJectCard extends Component<TypeProps> {
   static propTypes = {
     proJect: PropTypes.object.isRequired,
     currentProject: PropTypes.object.isRequired,
-    clickProjectItem: PropTypes.func.isRequired,
+    clickProjectChange: PropTypes.func.isRequired,
   };
+  private btnChang(e: any, proJect: Instance.Project) {
+    e.stopPropagation();
+    this.props.clickProjectChange(true, proJect);
+  }
   render() {
-    const { proJect = {}, clickProjectItem, currentProject } = this.props;
-    const { projectName, projectNamePs, projectId, sonCount } = proJect;
+    const { proJect = {}, clickProjectChange, currentProject } = this.props;
+    const { projectName, projectNamePs, projectId, sonProjectCount, projectPrincipal } = proJect;
     const is = projectId === currentProject.projectId;
     return (
       <Card
         title={<CardhradLeft projectName={projectName} projectNamePs={projectNamePs} />}
         extra={<CardhradRight projectId={projectId} />}
         className={is ? styles.isClick_card : null}
+        onClick={() => clickProjectChange(false)}
       >
         <CardContent proJect={proJect} />
         <div className={styles.Card_bottom}>
           <div className={styles.bottom_left}>
             <span>负责人：</span>
-            <span>刘</span>
+            <span>{projectPrincipal}</span>
           </div>
           <div className={styles.bottom_right}>
-            <Button onClick={() => clickProjectItem(proJect)}>子项目{sonCount}</Button>
+            <Button onClick={e => this.btnChang(e, proJect)}>子项目{sonProjectCount}</Button>
           </div>
         </div>
       </Card>

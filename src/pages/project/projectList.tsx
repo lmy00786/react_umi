@@ -4,9 +4,13 @@ import ProJectCard from '../../components/proJect-card';
 import styles from './projectList.less';
 import { getProjectList, getSonProjectList } from '../../server';
 import { sonProjectColumns } from './columns';
+import { arrTrans } from '../../utils/utils';
+import { Instance } from '../../types/typing.Instance';
 export default class project extends Component {
   state = {
+    // 项目列表数据
     data: [],
+    // 项目列表数量
     count: 0,
     // 模糊匹配名称
     name: '',
@@ -24,10 +28,15 @@ export default class project extends Component {
 
   // 获取列表数据
   private getData() {
+    // 清空子项目
+    this.setState({ currentProject: {}, sonProjectData: [] });
+
     const { name, pageSize, pageNum, id } = this.state;
     getProjectList({ name, pageSize, pageNum, id })
       .then((intetface_res: any) => {
-        const { data, count } = intetface_res;
+        let { data, count } = intetface_res;
+        // 将数组转为二维数组
+        if (data && data[0]) data = arrTrans(4, data);
         this.setState({ data, count });
       })
       .catch((e: any) => {
@@ -35,6 +44,7 @@ export default class project extends Component {
       });
   }
 
+  // 获取子项目数据
   private getSonProjectList(projectId: string) {
     getSonProjectList(projectId)
       .then((intetface_res: any) => {
@@ -52,24 +62,33 @@ export default class project extends Component {
   };
 
   // 点击某一个card
-  clickProjectItem = (currentProject: any) => {
-    this.setState({ currentProject });
-    this.getSonProjectList(currentProject.projectId);
+  private clickProjectChange = (flag: boolean, currentProject?: any) => {
+    if (flag) {
+      this.setState({ currentProject, sonProjectData: [] });
+      this.getSonProjectList(currentProject.projectId);
+    } else {
+      this.setState({ currentProject: {}, sonProjectData: [] });
+    }
   };
 
   // 创建子项目列表
   createdSonProjectTable() {
+    // 展示得数据
     const { sonProjectData } = this.state;
+    // 表格头部
     const columns = sonProjectColumns();
+
     return (
-      <Table
-        columns={columns}
-        dataSource={sonProjectData}
-        key={'project'}
-        rowKey={(record: any) => record.sonProjectId}
-        pagination={false}
-        className={styles.sonProject_table}
-      />
+      <Row gutter={16} className={styles.fadenum} key="table">
+        <Table
+          columns={columns}
+          dataSource={sonProjectData}
+          key={'project'}
+          rowKey={(record: any) => record.sonProjectId}
+          pagination={false}
+          className={styles.sonProject_table}
+        />
+      </Row>
     );
   }
 
@@ -81,30 +100,34 @@ export default class project extends Component {
   render() {
     const { pageSize, pageNum, count, currentProject, sonProjectData } = this.state;
 
-    let vNode = [];
+    // 将要渲染得虚拟节点
+    let vNode: any[] = [];
 
-    // 如果子项目列表有值创建table并插入到caedList中;
-    if (Array.isArray(sonProjectData) && sonProjectData[0]) {
-      vNode.push(this.createdSonProjectTable());
-    }
-
-    this.state.data.map((item: any) =>
+    // 遍历项目列表
+    this.state.data.map((item: any[], index: number) => {
       vNode.push(
-        <Col span={6} className={styles.gutter_box} key={item.projectId}>
-          <ProJectCard
-            proJect={item}
-            currentProject={currentProject}
-            clickProjectItem={(itemInfo: any) => this.clickProjectItem(itemInfo)}
-          />
-        </Col>,
-      ),
-    );
+        <Row gutter={16} key={index}>
+          {item.map((i: Instance.Project) => (
+            <Col span={6} className={styles.gutter_box} key={i.projectId}>
+              <ProJectCard
+                proJect={i}
+                currentProject={currentProject}
+                clickProjectChange={(itemInfo: any, flag: boolean) =>
+                  this.clickProjectChange(itemInfo, flag)
+                }
+              />
+            </Col>
+          ))}
+        </Row>,
+      );
 
+      // @ts-ignore
+      const flag = item.find((i: Instance.Project) => currentProject?.projectId === i.projectId);
+      if (flag) vNode.push(this.createdSonProjectTable());
+    });
     return (
       <div className={styles.view}>
-        <Row className={styles.content} gutter={16}>
-          {vNode}
-        </Row>
+        <div className={styles.content}>{vNode}</div>
         <div className={styles.page}>
           <Pagination
             defaultCurrent={1}

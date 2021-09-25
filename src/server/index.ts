@@ -15,9 +15,8 @@ export const getProjectList = function(params: PramasType.ProjectList) {
             projectNum: `0${params.pageNum}0${i + 1}`,
             projectType: '迁云',
             projectDepartment: '云化技术与架构',
-            projectPrincipal: `刘${i + 1}`,
-            projectChildLength: `10${+i}`,
-            sonCount: parseInt(Math.random() * 200 + ''),
+            projectPrincipal: `刘${params.pageNum}_${i + 1}`,
+            sonProjectCount: parseInt(Math.random() * 200 + ''),
           });
         }
         intetface_res = {
