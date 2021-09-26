@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, Button } from 'antd';
+import { Card, Button, Tooltip } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import styles from './index.less';
@@ -19,10 +19,14 @@ class CardhradRight extends PureComponent {
     return (
       <div className={styles.Card_hrad_right}>
         <div>
-          <EditOutlined style={{ color: 'white' }} />
+          <Tooltip placement="top" title="编辑">
+            <EditOutlined style={{ color: 'white' }} />
+          </Tooltip>
         </div>
         <div>
-          <DeleteOutlined style={{ color: 'white' }} />
+          <Tooltip placement="top" title="删除">
+            <DeleteOutlined style={{ color: 'white' }} />
+          </Tooltip>
         </div>
       </div>
     );

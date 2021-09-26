@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, message, Pagination, Table } from 'antd';
+import { Row, Col, message, Pagination, Table, Tooltip } from 'antd';
 import ProJectCard from '../../components/proJect-card';
 import styles from './projectList.less';
 import { getProjectList, getSonProjectList } from '../../server';
@@ -7,6 +7,7 @@ import { arrTrans, scrollTopDOM } from '../../utils/utils';
 import { Instance } from '../../types/typing.Instance';
 import moment from 'moment';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import AddPie from '@/components/add-pie';
 export default class project extends Component {
   // 表格头部
   private sonProjectColumns = [
@@ -62,6 +63,10 @@ export default class project extends Component {
       ),
     },
   ];
+
+  // 获取子组件区域DOM用于计算添加按钮的高度
+  private sonProjectRef: any = null;
+
   state = {
     // 项目列表数据
     data: [],
@@ -79,6 +84,10 @@ export default class project extends Component {
     currentProject: {},
     // 当前项目子项目数据
     sonProjectData: [],
+    // 控制显示添加子项目
+    isShowAddSonProject: false,
+    // 添加按钮展示的位置
+    calcHeight: 12,
   };
 
   // 获取列表数据
@@ -106,10 +115,18 @@ export default class project extends Component {
   private getSonProjectList(projectId: string, num: number) {
     getSonProjectList(projectId, num)
       .then((intetface_res: any) => {
-        this.setState({ sonProjectData: intetface_res.data });
+        this.setState({ sonProjectData: intetface_res.data }, () => {
+          if (this.sonProjectRef) {
+            let height = this.sonProjectRef.offsetHeight;
+            this.setState({ calcHeight: height > 450 ? height * 0.5 : 12 });
+          } else {
+            this.setState({ calcHeight: 12 });
+          }
+        });
       })
       .catch((e: any) => {
         message.error(e.message);
+        this.setState({ sonProjectData: [] });
       });
   }
 
@@ -123,6 +140,9 @@ export default class project extends Component {
   private clickProjectChange = (flag: boolean, currentProject?: any) => {
     if (flag) {
       const { projectId, sonProjectCount } = currentProject;
+
+      // @ts-ignore 如果ID相同不重新render
+      if (projectId === this.state.currentProject.projectId) return false;
       this.setState({ currentProject, sonProjectData: [] });
       this.getSonProjectList(projectId, sonProjectCount);
     } else {
@@ -131,23 +151,37 @@ export default class project extends Component {
   };
 
   // 子项目编辑
-  sonProjectEditChange = (record: any) => {
+  private sonProjectEditChange = (record: any) => {
     console.log(record, '子项目编辑');
   };
 
   // 子项目删除
-  sonProjectDelChange = (record: any) => {
+  private sonProjectDelChange = (record: any) => {
     console.log(record, '子项目删除');
   };
 
+  // 添加子项目
+  private addSonProjectModelChange() {
+    this.setState(
+      (state: any) => ({ isShowAddSonProject: !state.isShowAddSonProject }),
+      () => {
+        console.log(this.state.isShowAddSonProject ? '添加弹框展示' : '添加弹框隐藏');
+      },
+    );
+  }
+
   // 创建子项目列表
-  createdSonProjectTable() {
+  private createdSonProjectTable() {
     // 展示得数据
-    const { sonProjectData } = this.state;
+    const { sonProjectData, calcHeight } = this.state;
 
     return (
       // 展示隐藏通过此类名做动画fadenum（不想要直接删掉）
-      <Row gutter={16} className={styles.fadenum} key="table">
+      <div
+        className={`${styles.fadenum} ${styles.sonProject_table}`}
+        key="table"
+        ref={e => (this.sonProjectRef = e)}
+      >
         <Table
           columns={this.sonProjectColumns}
           dataSource={sonProjectData}
@@ -156,13 +190,23 @@ export default class project extends Component {
           pagination={false}
           className={styles.sonProject_table}
         />
-      </Row>
+        <div className={styles.addSonProject} style={{ bottom: calcHeight }}>
+          <Tooltip placement="top" title="添加">
+            <AddPie onClick={() => this.addSonProjectModelChange()} />
+          </Tooltip>
+        </div>
+      </div>
     );
   }
 
   componentDidMount() {
     // 初始化请求一次
     this.getData();
+  }
+
+  // 组件更新后重新计算添加按钮的高度
+  componentDidUpdate() {
+    // console.log(this.sonProjectRef);
   }
 
   render() {
