@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Card, Button } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
@@ -11,7 +11,7 @@ type TypeProps = {
   currentProject?: any;
 };
 // 头部右 侧
-class CardhradRight extends Component {
+class CardhradRight extends PureComponent {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
   };
@@ -29,7 +29,7 @@ class CardhradRight extends Component {
   }
 }
 // 头部左侧
-class CardhradLeft extends Component<any> {
+class CardhradLeft extends PureComponent<any> {
   static propTypes = {
     projectName: PropTypes.string.isRequired,
     projectNamePs: PropTypes.string.isRequired,
@@ -45,7 +45,7 @@ class CardhradLeft extends Component<any> {
   }
 }
 //内容部分
-class CardContent extends Component<TypeProps> {
+class CardContent extends PureComponent<TypeProps> {
   static propTypes = {
     proJect: PropTypes.object.isRequired,
   };
@@ -70,7 +70,7 @@ class CardContent extends Component<TypeProps> {
     );
   }
 }
-export default class ProJectCard extends Component<TypeProps> {
+export default class ProJectCard extends PureComponent<TypeProps> {
   static propTypes = {
     proJect: PropTypes.object.isRequired,
     currentProject: PropTypes.object.isRequired,
