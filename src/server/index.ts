@@ -4,7 +4,6 @@ import { nanoid } from 'nanoid';
 // 获取项目列表
 export const getProjectList = function(params: PramasType.ProjectList) {
   return new Promise((resolve, reject) => {
-    // 调接口 也是传参
     reqProjectList(params)
       .then((intetface_res: any) => {
         let arr = [];
@@ -25,7 +24,6 @@ export const getProjectList = function(params: PramasType.ProjectList) {
           count: 120,
           data: arr,
         };
-        // 将模拟的数据使用Promise中的resolve传出去
         intetface_res?.code === '0000' ? resolve(intetface_res) : reject(intetface_res);
       })
       .catch((e: any) => reject(e));
