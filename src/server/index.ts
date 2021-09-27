@@ -7,7 +7,7 @@ export const getProjectList = function(params: PramasType.ProjectList) {
     reqProjectList(params)
       .then((intetface_res: any) => {
         let arr = [];
-        for (let i = 0; i < 24; i++) {
+        for (let i = 0; i < params.pageSize; i++) {
           arr.push({
             projectId: nanoid(),
             projectName: `迁移阿里云${i + 1}`,

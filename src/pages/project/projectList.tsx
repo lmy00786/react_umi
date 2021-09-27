@@ -75,7 +75,7 @@ export default class project extends Component {
     // 模糊匹配名称
     name: '',
     // 条数
-    pageSize: 12,
+    pageSize: 24,
     // 页数
     pageNum: 1,
     // 子项目id必传
@@ -141,8 +141,11 @@ export default class project extends Component {
     if (flag) {
       const { projectId, sonProjectCount } = currentProject;
 
-      // @ts-ignore 如果ID相同不重新render
-      if (projectId === this.state.currentProject.projectId) return false;
+      // @ts-ignore
+      if (projectId === this.state.currentProject.projectId) {
+        this.setState({ currentProject: {}, sonProjectData: [] });
+        return false;
+      }
       this.setState({ currentProject, sonProjectData: [] });
       this.getSonProjectList(projectId, sonProjectCount);
     } else {
@@ -202,11 +205,6 @@ export default class project extends Component {
   componentDidMount() {
     // 初始化请求一次
     this.getData();
-  }
-
-  // 组件更新后重新计算添加按钮的高度
-  componentDidUpdate() {
-    // console.log(this.sonProjectRef);
   }
 
   render() {
